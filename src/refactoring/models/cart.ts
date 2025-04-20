@@ -15,38 +15,28 @@ export const getMaxApplicableDiscount = (item: CartItem) => {
 };
 
 export const calculateCartTotal = (cart: CartItem[], selectedCoupon: Coupon | null) => {
-  const result = cart.reduce(
-    (result, item) => {
-      const totalBeforeDiscount = result.totalBeforeDiscount + item.product.price * item.quantity;
-      const totalAfterDiscount = result.totalAfterDiscount + calculateItemTotal(item);
-      const totalDiscount = totalBeforeDiscount - totalAfterDiscount;
+  let totalBeforeDiscount = 0;
+  let totalAfterDiscount = 0;
+  let totalDiscount = 0;
 
-      return {
-        totalBeforeDiscount,
-        totalAfterDiscount,
-        totalDiscount,
-      };
-    },
-    {
-      totalBeforeDiscount: 0,
-      totalAfterDiscount: 0,
-      totalDiscount: 0,
-    }
-  );
+  cart.forEach((item) => {
+    totalBeforeDiscount += item.product.price * item.quantity;
+    totalAfterDiscount += calculateItemTotal(item);
+  });
+
+  totalDiscount = totalBeforeDiscount - totalAfterDiscount;
 
   // 선택된 쿠폰이 있다면 쿠폰을 적용합니다.
-  if (selectedCoupon !== null) {
-    const appliedCoupon = applyCoupon(result.totalAfterDiscount, selectedCoupon);
-    const totalDiscount = result.totalBeforeDiscount - appliedCoupon;
-
-    return {
-      ...result,
-      totalDiscount,
-      totalAfterDiscount: appliedCoupon,
-    };
+  if (selectedCoupon) {
+    totalAfterDiscount = applyCoupon(totalAfterDiscount, selectedCoupon);
+    totalDiscount = totalBeforeDiscount - totalAfterDiscount;
   }
 
-  return result;
+  return {
+    totalBeforeDiscount,
+    totalAfterDiscount,
+    totalDiscount,
+  };
 };
 
 export const updateCartItemQuantity = (
