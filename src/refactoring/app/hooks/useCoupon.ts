@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Coupon } from "../../types.ts";
+import { Coupon } from "../../entities/coupon/model";
 
 export const useCoupons = (initialCoupons: Coupon[]) => {
   const [coupons, setCoupons] = useState(initialCoupons);
