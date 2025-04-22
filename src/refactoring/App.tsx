@@ -49,7 +49,7 @@ const initialCoupons: Coupon[] = [
 ];
 
 const App = () => {
-  const { coupons, addCoupon } = useCoupons(initialCoupons);
+  const { coupons } = useCoupons(initialCoupons);
   const [authorized, setAuthorized] = useState(false);
 
   return (
@@ -67,11 +67,7 @@ const App = () => {
           </div>
         </nav>
         <main className="container mx-auto mt-6">
-          {authorized ? (
-            <AdminPage coupons={coupons} onCouponAdd={addCoupon} />
-          ) : (
-            <CartPage products={initialProducts} coupons={coupons} />
-          )}
+          {authorized ? <AdminPage /> : <CartPage products={initialProducts} coupons={coupons} />}
         </main>
       </div>
     </SystemProvider>
