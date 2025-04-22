@@ -24,7 +24,7 @@ export const SystemProvider = ({
       modifyProduct,
       addCoupon,
     }),
-    []
+    [],
   );
 
   return (

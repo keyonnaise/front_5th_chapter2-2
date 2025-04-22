@@ -43,7 +43,7 @@ export const calculateCartTotal = (cart: CartItem[], selectedCoupon: Coupon | nu
 export const updateCartItemQuantity = (
   cart: CartItem[],
   productId: string,
-  newQuantity: number
+  newQuantity: number,
 ): CartItem[] => {
   // 수량이 0으로 설정된 경우 항목을 제거
   if (newQuantity === 0) {

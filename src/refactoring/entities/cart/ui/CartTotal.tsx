@@ -5,7 +5,7 @@ function CartTotal() {
   const { cart, selectedCoupon } = useCartManagerStateContext("CartTotal");
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = calculateCartTotal(
     cart,
-    selectedCoupon
+    selectedCoupon,
   );
 
   return (

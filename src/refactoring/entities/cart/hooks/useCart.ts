@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { calculateCartTotal, CartItem, updateCartItemQuantity } from "../model";
 import { Coupon } from "../../coupon/model";
 import { Product } from "../../product/model";
+import { CartItem, calculateCartTotal, updateCartItemQuantity } from "../model";
 
 export const useCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
