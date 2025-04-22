@@ -1,16 +1,13 @@
+import { useCartActionsContext, useCartStateContext } from "../../../entities/cart/contexts";
 import { Coupon } from "../../../entities/coupon/model";
-import {
-  useCartManagerActionsContext,
-  useCartManagerStateContext,
-} from "../../../widgets/cart-manager/contexts";
 
 interface Props {
   coupons: Coupon[];
 }
 
 function CouponSelector({ coupons }: Props) {
-  const { selectedCoupon } = useCartManagerStateContext("CouponSelector");
-  const { applyCoupon } = useCartManagerActionsContext("CouponSelector");
+  const { selectedCoupon } = useCartStateContext("CouponSelector");
+  const { applyCoupon } = useCartActionsContext("CouponSelector");
 
   return (
     <div className="mt-6 bg-white p-4 rounded shadow">

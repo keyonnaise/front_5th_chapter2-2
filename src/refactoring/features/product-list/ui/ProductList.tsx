@@ -1,16 +1,13 @@
+import { useCartActionsContext, useCartStateContext } from "../../../entities/cart/contexts";
 import { Product } from "../../../entities/product/model";
-import {
-  useCartManagerActionsContext,
-  useCartManagerStateContext,
-} from "../../../widgets/cart-manager/contexts";
 
 interface Props {
   products: Product[];
 }
 
 function ProductList({ products }: Props) {
-  const { cart } = useCartManagerStateContext("ProductList");
-  const { addToCart } = useCartManagerActionsContext("ProductList");
+  const { cart } = useCartStateContext("ProductList");
+  const { addToCart } = useCartActionsContext("ProductList");
 
   const getMaxDiscount = (discounts: { quantity: number; rate: number }[]) => {
     return discounts.reduce((max, discount) => Math.max(max, discount.rate), 0);

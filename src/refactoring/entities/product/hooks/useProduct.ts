@@ -1,16 +1,17 @@
-import { useCallback, useState } from "react";
-import { Product } from "../../entities/product/model";
+import { useState } from "react";
+import { usePreservedCallback } from "../../../shared/hooks";
+import { Product } from "../model";
 
 export const useProducts = (initialProducts: Product[]) => {
   const [products, setProducts] = useState(initialProducts);
 
-  const addProduct = useCallback((product: Product) => {
+  const addProduct = usePreservedCallback((product: Product) => {
     setProducts((prev) => [...prev, product]);
-  }, []);
+  });
 
-  const modifyProduct = useCallback((product: Product) => {
+  const modifyProduct = usePreservedCallback((product: Product) => {
     setProducts((prev) => prev.map((current) => (current.id === product.id ? product : current)));
-  }, []);
+  });
 
   return {
     products,

@@ -1,8 +1,8 @@
-import { useCartManagerStateContext } from "../../../widgets/cart-manager/contexts";
+import { useCartStateContext } from "../contexts";
 import { calculateCartTotal } from "../model";
 
 function CartTotal() {
-  const { cart, selectedCoupon } = useCartManagerStateContext("CartTotal");
+  const { cart, selectedCoupon } = useCartStateContext("CartTotal");
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = calculateCartTotal(
     cart,
     selectedCoupon,

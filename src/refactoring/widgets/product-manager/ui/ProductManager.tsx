@@ -1,13 +1,16 @@
 import { useState } from "react";
+import {
+  useProductActionsContext,
+  useProductStateContext,
+} from "../../../entities/product/contexts";
 import { Product } from "../../../entities/product/model";
-import { usePreservedCallback } from "../../../shared/hooks";
 import { ProductCreateForm } from "../../../features/product-create-form/ui";
 import { ProductModifyForm } from "../../../features/product-modify-form/ui";
-import { useSystemActionsContext, useSystemStateContext } from "../../../app/contexts";
+import { usePreservedCallback } from "../../../shared/hooks";
 
 export const ProductManager = () => {
-  const { products } = useSystemStateContext("ProductManager");
-  const { addProduct, modifyProduct } = useSystemActionsContext("ProductManager");
+  const { products } = useProductStateContext("ProductManager");
+  const { addProduct, modifyProduct } = useProductActionsContext("ProductManager");
 
   const [showProductCreateForm, setShowCreateProductForm] = useState(false);
   const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());

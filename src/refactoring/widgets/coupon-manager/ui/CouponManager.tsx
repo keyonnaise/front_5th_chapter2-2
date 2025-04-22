@@ -1,10 +1,10 @@
-import { useSystemActionsContext, useSystemStateContext } from "../../../app/contexts";
+import { useCouponActionsContext, useCouponStateContext } from "../../../entities/coupon/contexts";
 import { CouponCreateForm } from "../../../features/coupon-create-form/ui";
 import { CouponList } from "../../../features/coupon-list/ui";
 
 export const CouponManager = () => {
-  const { coupons } = useSystemStateContext("ProductManager");
-  const { addCoupon } = useSystemActionsContext("ProductManager");
+  const { coupons } = useCouponStateContext("ProductManager");
+  const { addCoupon } = useCouponActionsContext("ProductManager");
 
   return (
     <div>

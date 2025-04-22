@@ -1,12 +1,9 @@
+import { useCartActionsContext, useCartStateContext } from "../../../entities/cart/contexts";
 import { CartItem } from "../../../entities/cart/model";
-import {
-  useCartManagerActionsContext,
-  useCartManagerStateContext,
-} from "../../../widgets/cart-manager/contexts";
 
 function CartList() {
-  const { cart } = useCartManagerStateContext("CartList");
-  const { updateQuantity, removeFromCart } = useCartManagerActionsContext("CartList");
+  const { cart } = useCartStateContext("CartList");
+  const { updateQuantity, removeFromCart } = useCartActionsContext("CartList");
 
   const getAppliedDiscount = (item: CartItem) => {
     const { discounts } = item.product;

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Coupon } from "../../entities/coupon/model";
+import { Coupon } from "../model";
 
 export const useCoupons = (initialCoupons: Coupon[]) => {
   const [coupons, setCoupons] = useState(initialCoupons);

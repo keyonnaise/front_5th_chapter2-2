@@ -1,19 +1,21 @@
-import { describe, expect, test } from "vitest";
 import { act, fireEvent, render, renderHook, screen, within } from "@testing-library/react";
-import { AdminPage } from "../../refactoring/pages/admin/ui/AdminPage";
-import { Product } from "../../refactoring/entities/product/model";
-import { Coupon } from "../../refactoring/entities/coupon/model";
-import { CartPage } from "../../refactoring/pages/cart/ui";
+import { describe, expect, test } from "vitest";
+import { useCart } from "../../refactoring/entities/cart/hooks";
 import {
+  CartItem,
   calculateCartTotal,
   calculateItemTotal,
-  CartItem,
   getMaxApplicableDiscount,
   updateCartItemQuantity,
 } from "../../refactoring/entities/cart/model";
-import { useCart } from "../../refactoring/entities/cart/hooks";
-import { useCoupons, useProducts } from "../../refactoring/app/hooks";
-import { SystemProvider } from "../../refactoring/app/contexts";
+import CouponProvider from "../../refactoring/entities/coupon/contexts/CouponProvider";
+import { useCoupons } from "../../refactoring/entities/coupon/hooks";
+import { Coupon } from "../../refactoring/entities/coupon/model";
+import ProductProvider from "../../refactoring/entities/product/contexts/ProductProvider";
+import { useProducts } from "../../refactoring/entities/product/hooks";
+import { Product } from "../../refactoring/entities/product/model";
+import { AdminPage } from "../../refactoring/pages/admin/ui/AdminPage";
+import { CartPage } from "../../refactoring/pages/cart/ui";
 
 const mockProducts: Product[] = [
   {
@@ -55,9 +57,11 @@ const mockCoupons: Coupon[] = [
 
 const TestAdminPage = () => {
   return (
-    <SystemProvider products={mockProducts} coupons={mockCoupons}>
-      <AdminPage />
-    </SystemProvider>
+    <ProductProvider products={mockProducts}>
+      <CouponProvider coupons={mockCoupons}>
+        <AdminPage />
+      </CouponProvider>
+    </ProductProvider>
   );
 };
 
@@ -65,9 +69,11 @@ describe("basic > ", () => {
   describe("시나리오 테스트 > ", () => {
     test("장바구니 페이지 테스트 > ", async () => {
       render(
-        <SystemProvider products={mockProducts} coupons={mockCoupons}>
-          <CartPage />
-        </SystemProvider>
+        <ProductProvider products={mockProducts}>
+          <CouponProvider coupons={mockCoupons}>
+            <CartPage />
+          </CouponProvider>
+        </ProductProvider>,
       );
       const product1 = screen.getByTestId("product-p1");
       const product2 = screen.getByTestId("product-p2");
