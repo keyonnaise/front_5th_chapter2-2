@@ -66,9 +66,7 @@ const App = () => {
             </button>
           </div>
         </nav>
-        <main className="container mx-auto mt-6">
-          {authorized ? <AdminPage /> : <CartPage products={initialProducts} coupons={coupons} />}
-        </main>
+        <main className="container mx-auto mt-6">{authorized ? <AdminPage /> : <CartPage />}</main>
       </div>
     </SystemProvider>
   );

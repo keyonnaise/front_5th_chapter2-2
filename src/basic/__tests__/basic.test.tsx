@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { describe, expect, test } from "vitest";
 import { act, fireEvent, render, renderHook, screen, within } from "@testing-library/react";
 import { AdminPage } from "../../refactoring/pages/admin/ui/AdminPage";
@@ -11,9 +10,10 @@ import {
   CartItem,
   getMaxApplicableDiscount,
   updateCartItemQuantity,
-} from "../../refactoring/features/cart/model";
-import { useCart } from "../../refactoring/pages/cart/hooks";
+} from "../../refactoring/entities/cart/model";
+import { useCart } from "../../refactoring/entities/cart/hooks";
 import { useCoupons, useProducts } from "../../refactoring/app/hooks";
+import { SystemProvider } from "../../refactoring/app/contexts";
 
 const mockProducts: Product[] = [
   {
@@ -54,38 +54,21 @@ const mockCoupons: Coupon[] = [
 ];
 
 const TestAdminPage = () => {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [coupons, setCoupons] = useState<Coupon[]>(mockCoupons);
-
-  const handleProductUpdate = (updatedProduct: Product) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
-  };
-
-  const handleProductAdd = (newProduct: Product) => {
-    setProducts((prevProducts) => [...prevProducts, newProduct]);
-  };
-
-  const handleCouponAdd = (newCoupon: Coupon) => {
-    setCoupons((prevCoupons) => [...prevCoupons, newCoupon]);
-  };
-
   return (
-    <AdminPage
-      products={products}
-      coupons={coupons}
-      onProductUpdate={handleProductUpdate}
-      onProductAdd={handleProductAdd}
-      onCouponAdd={handleCouponAdd}
-    />
+    <SystemProvider products={mockProducts} coupons={mockCoupons}>
+      <AdminPage />
+    </SystemProvider>
   );
 };
 
 describe("basic > ", () => {
   describe("시나리오 테스트 > ", () => {
     test("장바구니 페이지 테스트 > ", async () => {
-      render(<CartPage products={mockProducts} coupons={mockCoupons} />);
+      render(
+        <SystemProvider products={mockProducts} coupons={mockCoupons}>
+          <CartPage />
+        </SystemProvider>
+      );
       const product1 = screen.getByTestId("product-p1");
       const product2 = screen.getByTestId("product-p2");
       const product3 = screen.getByTestId("product-p3");
@@ -273,7 +256,7 @@ describe("basic > ", () => {
       const updatedProduct = { ...initialProducts[0], name: "Updated Product" };
 
       act(() => {
-        result.current.updateProduct(updatedProduct);
+        result.current.modifyProduct(updatedProduct);
       });
 
       expect(result.current.products[0]).toEqual({

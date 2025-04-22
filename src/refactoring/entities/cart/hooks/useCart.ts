@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { calculateCartTotal, CartItem, updateCartItemQuantity } from "../../../features/cart/model";
-import { Coupon } from "../../../entities/coupon/model";
-import { Product } from "../../../entities/product/model";
+import { calculateCartTotal, CartItem, updateCartItemQuantity } from "../model";
+import { Coupon } from "../../coupon/model";
+import { Product } from "../../product/model";
 
 export const useCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -9,6 +9,7 @@ export const useCart = () => {
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find((item) => item.product.id === product.id);
+
     if (existingItem) {
       updateQuantity(product.id, existingItem.quantity + 1);
       return;
