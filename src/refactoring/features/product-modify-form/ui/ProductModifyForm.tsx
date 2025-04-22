@@ -1,41 +1,25 @@
-import { Discount, Product } from "../../../entities/product/model";
-import { usePreservedCallback } from "../../../shared/hooks";
-import { UpdateProductFormFields } from "../model";
+import { Product } from "../../../entities/product/model";
+import { useProductModifyForm } from "../hooks";
 
 interface Props {
   product: Product;
-  discount: Discount;
-  fields: UpdateProductFormFields | null;
-  onProductEdit: (product: Product) => void;
-  onProductUpdate: () => void;
-  onProductChange: <K extends keyof UpdateProductFormFields>(
-    productId: string,
-    key: K,
-    value: UpdateProductFormFields[K]
-  ) => void;
-  onAddDiscount: (productId: string) => void;
-  onRemoveDiscount: (productId: string, index: number) => void;
-  onDiscountChange: <K extends keyof Discount>(key: K, value: Discount[K]) => void;
+  onProductModify: (product: Product) => void;
 }
 
-export const ProductUpdateForm = ({
-  product,
-  discount,
-  fields,
-  onProductEdit,
-  onProductChange,
-  onProductUpdate,
-  onAddDiscount,
-  onRemoveDiscount,
-  onDiscountChange,
-}: Props) => {
+export const ProductModifyForm = ({ product, onProductModify }: Props) => {
+  const {
+    fields,
+    discount,
+    setFields,
+    addDiscount,
+    removeDiscount,
+    modifyProduct: completeModify,
+    onFieldChange,
+    onDiscountChange,
+  } = useProductModifyForm({
+    onProductModify,
+  });
   const editing = fields?.id === product.id;
-
-  const handleProductChange = usePreservedCallback(
-    <K extends keyof UpdateProductFormFields>(key: K, value: UpdateProductFormFields[K]) => {
-      onProductChange(product.id, key, value);
-    }
-  );
 
   return (
     <div className="mt-2">
@@ -46,7 +30,7 @@ export const ProductUpdateForm = ({
             <input
               type="text"
               value={fields.name}
-              onChange={(e) => handleProductChange("name", e.target.value)}
+              onChange={(e) => onFieldChange("name", e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -55,7 +39,7 @@ export const ProductUpdateForm = ({
             <input
               type="number"
               value={fields.price}
-              onChange={(e) => handleProductChange("price", parseInt(e.target.value))}
+              onChange={(e) => onFieldChange("price", parseInt(e.target.value))}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -64,7 +48,7 @@ export const ProductUpdateForm = ({
             <input
               type="number"
               value={fields.stock}
-              onChange={(e) => handleProductChange("stock", parseInt(e.target.value))}
+              onChange={(e) => onFieldChange("stock", parseInt(e.target.value))}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -78,7 +62,7 @@ export const ProductUpdateForm = ({
                   {discount.quantity}개 이상 구매 시 {discount.rate * 100}% 할인
                 </span>
                 <button
-                  onClick={() => onRemoveDiscount(product.id, index)}
+                  onClick={() => removeDiscount(index)}
                   className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                 >
                   삭제
@@ -101,7 +85,7 @@ export const ProductUpdateForm = ({
                 className="w-1/3 p-2 border rounded"
               />
               <button
-                onClick={() => onAddDiscount(product.id)}
+                onClick={() => addDiscount()}
                 className="w-1/3 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
               >
                 할인 추가
@@ -109,7 +93,7 @@ export const ProductUpdateForm = ({
             </div>
           </div>
           <button
-            onClick={onProductUpdate}
+            onClick={completeModify}
             className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mt-2"
           >
             수정 완료
@@ -117,8 +101,8 @@ export const ProductUpdateForm = ({
         </div>
       ) : (
         <div>
-          {product.discounts.map((discount, index) => (
-            <div key={index} className="mb-2">
+          {product.discounts.map((discount, i) => (
+            <div key={i} className="mb-2">
               <span>
                 {discount.quantity}개 이상 구매 시 {discount.rate * 100}% 할인
               </span>
@@ -126,7 +110,7 @@ export const ProductUpdateForm = ({
           ))}
           <button
             data-testid="modify-button"
-            onClick={() => onProductEdit(product)}
+            onClick={() => setFields(product)}
             className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-2"
           >
             수정

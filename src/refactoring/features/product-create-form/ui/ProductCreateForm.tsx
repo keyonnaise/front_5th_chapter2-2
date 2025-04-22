@@ -1,32 +1,12 @@
-import { useState } from "react";
 import { Product } from "../../../entities/product/model";
-import { CreateProductFormFields } from "../model";
-import { usePreservedCallback } from "../../../shared/hooks";
-
-const INITIAL_FIELDS: CreateProductFormFields = {
-  name: "",
-  price: 0,
-  stock: 0,
-  discounts: [],
-};
+import { useProductCreateForm } from "../hooks";
 
 interface Props {
   onProductAdd(newProduct: Product): void;
 }
 
 export const ProductCreateForm = ({ onProductAdd }: Props) => {
-  const [fields, setFields] = useState<CreateProductFormFields>(INITIAL_FIELDS);
-
-  const handleFieldChange = usePreservedCallback(
-    <K extends keyof CreateProductFormFields>(key: K, value: CreateProductFormFields[K]) => {
-      setFields((prev) => ({ ...prev, [key]: value }));
-    }
-  );
-
-  const handleProductAdd = usePreservedCallback(() => {
-    onProductAdd({ ...fields, id: Date.now().toString() });
-    setFields(INITIAL_FIELDS);
-  });
+  const { fields, addProduct, onFieldChange } = useProductCreateForm({ onProductAdd });
 
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
@@ -39,7 +19,7 @@ export const ProductCreateForm = ({ onProductAdd }: Props) => {
           id="productName"
           type="text"
           value={fields.name}
-          onChange={(e) => handleFieldChange("name", e.target.value)}
+          onChange={(e) => onFieldChange("name", e.target.value)}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -51,7 +31,7 @@ export const ProductCreateForm = ({ onProductAdd }: Props) => {
           id="productPrice"
           type="number"
           value={fields.price}
-          onChange={(e) => handleFieldChange("price", parseInt(e.target.value))}
+          onChange={(e) => onFieldChange("price", parseInt(e.target.value))}
           className="w-full p-2 border rounded"
         />
       </div>
@@ -63,12 +43,12 @@ export const ProductCreateForm = ({ onProductAdd }: Props) => {
           id="productStock"
           type="number"
           value={fields.stock}
-          onChange={(e) => handleFieldChange("stock", parseInt(e.target.value))}
+          onChange={(e) => onFieldChange("stock", parseInt(e.target.value))}
           className="w-full p-2 border rounded"
         />
       </div>
       <button
-        onClick={handleProductAdd}
+        onClick={addProduct}
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
       >
         추가

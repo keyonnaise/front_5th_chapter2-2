@@ -1,23 +1,13 @@
 import { useState } from "react";
-import { Product } from "../../../entities/product/model";
 import { Coupon } from "../../../entities/coupon/model";
-import { ProductManager } from "../../../widgets/product-manager/ui/ProductManager";
+import { ProductManager } from "../../../widgets/product-manager/ui";
 
 interface Props {
-  products: Product[];
   coupons: Coupon[];
-  onProductUpdate: (updatedProduct: Product) => void;
-  onProductAdd: (newProduct: Product) => void;
   onCouponAdd: (newCoupon: Coupon) => void;
 }
 
-export const AdminPage = ({
-  products,
-  coupons,
-  onProductUpdate,
-  onProductAdd,
-  onCouponAdd,
-}: Props) => {
+export const AdminPage = ({ coupons, onCouponAdd }: Props) => {
   const [newCoupon, setNewCoupon] = useState<Coupon>({
     name: "",
     code: "",
@@ -40,12 +30,9 @@ export const AdminPage = ({
       <h1 className="text-3xl font-bold mb-6">관리자 페이지</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/*  상품 관리 */}
-        <ProductManager
-          products={products}
-          onProductAdd={onProductAdd}
-          onProductUpdate={onProductUpdate}
-        />
+        <ProductManager />
 
+        {/*  쿠폰 관리 */}
         <div>
           <h2 className="text-2xl font-semibold mb-4">쿠폰 관리</h2>
           <div className="bg-white p-4 rounded shadow">

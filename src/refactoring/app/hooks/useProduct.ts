@@ -8,13 +8,13 @@ export const useProducts = (initialProducts: Product[]) => {
     setProducts((prev) => [...prev, product]);
   }, []);
 
-  const updateProduct = useCallback((product: Product) => {
+  const modifyProduct = useCallback((product: Product) => {
     setProducts((prev) => prev.map((current) => (current.id === product.id ? product : current)));
   }, []);
 
   return {
     products,
     addProduct,
-    updateProduct,
+    modifyProduct,
   };
 };
