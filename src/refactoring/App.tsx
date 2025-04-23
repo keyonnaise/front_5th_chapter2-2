@@ -5,6 +5,7 @@ import ProductProvider from "./entities/product/contexts/ProductProvider";
 import { Product } from "./entities/product/model";
 import { AdminPage } from "./pages/admin/ui";
 import { CartPage } from "./pages/cart/ui";
+import { storage } from "./shared/lib";
 
 const initialProducts: Product[] = [
   {
@@ -51,9 +52,12 @@ const initialCoupons: Coupon[] = [
 const App = () => {
   const [authorized, setAuthorized] = useState(false);
 
+  const savedProducts = storage.getItem("products");
+  const savedCoupons = storage.getItem("coupons");
+
   return (
-    <ProductProvider products={initialProducts}>
-      <CouponProvider coupons={initialCoupons}>
+    <ProductProvider products={savedProducts || initialProducts}>
+      <CouponProvider coupons={savedCoupons || initialCoupons}>
         <div className="min-h-screen bg-gray-100">
           <nav className="bg-blue-600 text-white p-4">
             <div className="container mx-auto flex justify-between items-center">
