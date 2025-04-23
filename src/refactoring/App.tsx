@@ -5,55 +5,24 @@ import ProductProvider from "./entities/product/contexts/ProductProvider";
 import { Product } from "./entities/product/model";
 import { AdminPage } from "./pages/admin/ui";
 import { CartPage } from "./pages/cart/ui";
+import { getCoupons } from "./shared/api/coupons/getCoupons";
+import { getProducts } from "./shared/api/products";
+import { useLoadableState } from "./shared/hooks/useLoadableState";
 import { storage } from "./shared/lib";
 
-const initialProducts: Product[] = [
-  {
-    id: "p1",
-    name: "상품1",
-    price: 10000,
-    stock: 20,
-    discounts: [
-      { quantity: 10, rate: 0.1 },
-      { quantity: 20, rate: 0.2 },
-    ],
-  },
-  {
-    id: "p2",
-    name: "상품2",
-    price: 20000,
-    stock: 20,
-    discounts: [{ quantity: 10, rate: 0.15 }],
-  },
-  {
-    id: "p3",
-    name: "상품3",
-    price: 30000,
-    stock: 20,
-    discounts: [{ quantity: 10, rate: 0.2 }],
-  },
-];
+const initialProducts: Product[] = [];
 
-const initialCoupons: Coupon[] = [
-  {
-    name: "5000원 할인 쿠폰",
-    code: "AMOUNT5000",
-    discountType: "amount",
-    discountValue: 5000,
-  },
-  {
-    name: "10% 할인 쿠폰",
-    code: "PERCENT10",
-    discountType: "percentage",
-    discountValue: 10,
-  },
-];
+const initialCoupons: Coupon[] = [];
 
 const App = () => {
   const [authorized, setAuthorized] = useState(false);
 
-  const savedProducts = storage.getItem("products");
-  const savedCoupons = storage.getItem("coupons");
+  const { data } = useLoadableState(getInitialData);
+
+  if (data === null) return null;
+
+  const savedProducts = data[0] || storage.getItem("products");
+  const savedCoupons = data[1] || storage.getItem("coupons");
 
   return (
     <ProductProvider products={savedProducts || initialProducts}>
@@ -77,6 +46,15 @@ const App = () => {
       </CouponProvider>
     </ProductProvider>
   );
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Utils
+ * -----------------------------------------------------------------------------------------------*/
+
+const getInitialData = () => {
+  const requests = [getProducts(), getCoupons()] as const;
+  return Promise.all(requests);
 };
 
 export default App;
